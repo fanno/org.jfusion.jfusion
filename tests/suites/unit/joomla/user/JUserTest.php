@@ -346,8 +346,8 @@ class JUserTest extends TestCaseDatabase
 		$this->object->setLastVisit($timestamp);
 		$testUser = new JUser(42);
 		$this->assertThat(
-			$testUser->lastvisitDate,
-			$this->equalTo($timestamp)
+            $testUser->lastvisitDate,
+            $this->equalTo($timestamp)
 		);
 	}
 
@@ -393,10 +393,35 @@ class JUserTest extends TestCaseDatabase
 	 */
 	public function testBind()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+        $array = array();
+        $longString = '12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890';
+
+        $array['username'] = 'username_ok'.$longString;
+        $array['password'] = 'password_ok'.$longString;
+        $array['password2'] = 'password_ok'.$longString;
+
+        $testUser = new JUser();
+        $result = $testUser->bind($array);
+        $this->assertTrue(
+            $result
+        );
+        $this->assertRegExp(
+            '/^\w{1,150}$/',
+            $testUser->username
+        );
+        $this->assertRegExp(
+            '/^\w{1,100}$/',
+            $testUser->password
+        );
+
+        $array['password2'] = 'password_ok_not_same';
+
+        $testUser = new JUser();
+        $result = $testUser->bind($array);
+
+        $this->assertFalse(
+            $result
+        );
 	}
 
 	/**
