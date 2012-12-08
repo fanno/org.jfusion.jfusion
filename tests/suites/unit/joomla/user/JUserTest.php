@@ -418,7 +418,6 @@ class JUserTest extends TestCaseDatabase
 
         $testUser = new JUser();
         $result = $testUser->bind($array);
-
         $this->assertFalse(
             $result
         );
